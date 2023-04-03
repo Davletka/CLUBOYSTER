@@ -1,0 +1,95 @@
+﻿@page "/"
+@inject NavigationManager navigationManager
+@using CLUBOYSTER.Data
+@inject UserService userService
+@inject IJSRuntime jsRun
+
+
+
+<PageTitle>Autorization Form</PageTitle>
+
+<EditForm Model="userModel" style="height:auto; margin-bottom:1.9rem">
+    <DataAnnotationsValidator/>
+    <div class="align-content-center" style="text-align:center">
+        <a class="navbar-brand fw-bold fs-2 m-3" style="color:white">BLUE OYSTER</a>
+        <label></label>
+    </div>
+    <h3 class="h3 fs-4 fw-bold">Авторизация</h3>
+    <label class="fw-bold" for="name">Логин</label>
+    <InputText id="name" class="fw-bold" type="text" @bind-Value="userModel.Login"></InputText>
+    <ValidationMessage class="fw-bold" For="() => userModel.Login"/>
+
+    <label class="fw-bold" for="password">Пароль</label>
+    <InputText id="password" class="fw-bold" type="password" @bind-Value="userModel.Password"></InputText>
+    <ValidationMessage class="fw-bold" For="() => userModel.Password" />
+
+    <button type="button" style="border-radius: 20px" class="fw-bold" @onclick="Autorizaiton">Войти</button>
+            <label></label>
+            <div style="text-align:center">
+              <p class="mb-0 text-white fw-bold">У вас не имеется аккаунта? <a href="/registration" class="text-white-50 fw-bold"> Регистрация</a>
+              </p>
+            </div>
+
+    @if (check == true)
+    {
+        <blockquote style="color:white; text-align:center;  top:100px; line-height: 4" class="fw-bold">
+            <strong>@exeption</strong>
+        </blockquote>
+    }
+
+</EditForm>
+
+@code {
+
+    User userModel = new User();
+
+    private string? exeption = "Введен неверный логин/пароль";
+
+    private bool? check = false;
+
+    private bool? succes = false;
+
+    private void Autorizaiton()
+    {
+        if (userModel.Login != null || userModel.Password != null)
+        {
+            var checkUsers = MongoDb.FindUsers();
+            bool tmp = true;
+
+            foreach(var item in checkUsers)
+            {
+                if (userModel.Login == item.Login && userModel.Password == item.Password)
+                {
+                    userService.Set(item);
+
+                    switch(item.GetType().Name)
+                    {
+                        case "Owner":
+                            navigationManager.NavigateTo("/ownerpanel");
+                            jsRun.InvokeVoidAsync("OpenTowRow");
+                            jsRun.InvokeVoidAsync("OpenSideBar");
+                            jsRun.InvokeVoidAsync("OpenNavBar");
+                            jsRun.InvokeVoidAsync("OpenNavMenu");
+                            jsRun.InvokeVoidAsync("OpenYprav");
+                            jsRun.InvokeVoidAsync("OpenYpravEmployee");
+                            break;
+                        case "Employee":
+                            navigationManager.NavigateTo("/main");
+                            jsRun.InvokeVoidAsync("OpenTowRow");
+                            jsRun.InvokeVoidAsync("OpenSideBar");
+                            jsRun.InvokeVoidAsync("OpenNavBar");
+                            jsRun.InvokeVoidAsync("OpenNavMenu");
+                            break;
+                        case "User":
+                            navigationManager.NavigateTo("/mainpage");
+                            break;
+                    }
+                    tmp = false;
+                    succes = true;
+                    break;
+                }
+            }
+            if (tmp) check = true;
+        }
+    }
+}

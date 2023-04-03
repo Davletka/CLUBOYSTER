@@ -1,0 +1,95 @@
+﻿@page "/registration"
+@using CLUBOYSTER.Data
+@inject NavigationManager navigationManager;
+
+<PageTitle>Registration Form</PageTitle>
+
+<EditForm Model="userModel" style="height:auto; border-radius: 10px; top:470px">
+    <DataAnnotationsValidator/>
+
+    <h3 class="h3 fw-bold" style="line-height:1.4; margin-bottom:1.8rem">Регистрация</h3>
+    <InputText id="name" type="text" placeholder="Логин" class="fw-bold" @bind-Value="userModel.Login"></InputText>
+    <ValidationMessage For="() => userModel.Login"/>
+
+    <InputText id="name" type="text" placeholder="Имя" class="fw-bold" @bind-Value="userModel.FirstName"></InputText>
+    <ValidationMessage For="() => userModel.FirstName" />
+
+    <InputText id="name" type="text" placeholder="Номер телефона" class="fw-bold" maxlength="11" @bind-Value="userModel.Phone"></InputText>
+    <ValidationMessage For="() => userModel.Phone" />
+
+    <InputText id="name" type="text" placeholder="Почта" class="fw-bold" @bind-Value="userModel.Email"></InputText>
+    <ValidationMessage For="() => userModel.Email" />
+
+    <InputText id="password" type="password" placeholder="Пароль" class="fw-bold" @bind-Value="userModel.Password"></InputText>
+    <ValidationMessage For="() => userModel.Password" />
+
+    <InputText id="password" type="password" placeholder="Подтверждение пароля" class="fw-bold"  @bind-Value="ConfirmPassword_"></InputText>
+    <ValidationMessage For="() => userModel.Password" />
+
+    <button type="button" style="height:35; border-radius: 20px;" class="fw-bold" @onclick="Registration">Зарегистрироваться</button>
+    <label></label>
+    <div style="text-align:center">
+        <p class="mb-0 text-white fw-bold">Есть аккаунт? <a href="" class="text-white-50 fw-bold"> Авторизация</a>
+        </p>
+    </div>
+
+    @if (check == true)
+    {
+        <strong class="text-center fw-bold">@exeption</strong>
+    }
+
+</EditForm>
+
+
+@code {
+    User userModel = new User();
+
+    private string? ConfirmPassword_;
+
+    private bool? check;
+    private string? exeption;
+
+    private void Registration()
+    {
+        var users = MongoDb.FindUsers();
+
+        if (userModel.Login != null && userModel.FirstName != null && userModel.Phone != null && userModel.Email != null && userModel.Password != null && ConfirmPassword_ != null)
+        {
+            if (userModel.Password == ConfirmPassword_)
+            {
+                foreach (var item in users)
+                {
+                    if (item.Login == userModel.Login)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        if (item.Email == userModel.Email)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            if (item.Phone == userModel.Phone)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                User newUser = new User()
+                {
+                    Login = userModel.Login,
+                    FirstName = userModel.FirstName,
+                    Phone = userModel.Phone,
+                    Email = userModel.Email,
+                    Password = userModel.Password
+                };
+                MongoDb.AddDb(newUser);
+                navigationManager.NavigateTo("");
+            }
+        }
+    }
+}

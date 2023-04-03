@@ -1,0 +1,83 @@
+﻿@page "/main"
+@using CLUBOYSTER.Shared.MyComponents
+@using ChartJs.Blazor.PieChart
+<h2 style="color:white; margin-bottom:1.5rem" class="fw-bold">Общий свод</h2>
+
+<div class="container-fluid">
+    <div class="row" style="flex-wrap:wrap; display:flex;margin-right: -15px;
+    margin-left: -15px;">
+            <div class="row">
+                <div class="col-lg-6 col-xl-3 mb-4 ">
+                    <TotalEarning />
+                </div>
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <AverageMonth />
+                </div>
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <TotalCustomers />
+                </div>
+
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <TotalGrowth />
+                </div>
+            </div>
+
+                <div class="row">
+        <div class="col-lg-6 mb-2">
+<div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="text-secondary font-weight-bold m-0 text-black">Доходы и Расходы за месяц</h6>
+    </div>
+    <div class="card-body">
+        <Chart Config="_config" ></Chart>
+        <div class="chart-area" style="display:none"><canvas id="chartCustomers"></canvas></div>
+    </div>
+</div>
+        </div>
+        <div class="col-lg-6 mb-2">
+<div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="text-secondary font-weight-bold m-0 text-black">Доходы</h6>
+    </div>
+    <div class="card-body">
+        <div class="chart-area"><canvas id="chartCustomers"></canvas></div>
+    </div>
+</div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+@code {
+
+    private PieConfig? _config;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _config = new PieConfig
+            {
+                Options = new PieOptions
+                {
+                    Responsive = true,
+                }
+            };
+
+        foreach (string color in new[] { "Доход", "Расход", "Кредит" })
+        {
+            _config.Data.Labels.Add(color);
+        }
+
+        PieDataset<int> dataset = new PieDataset<int>(new[] { 6, 5, 3 })
+            {
+                BackgroundColor = new[]
+                        {
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+        }
+            };
+
+        _config.Data.Datasets.Add(dataset);
+    }
+}

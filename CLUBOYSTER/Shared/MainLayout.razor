@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+@using CLUBOYSTER.Data;
+@inject IJSRuntime jsRun;
+@inject NavigationManager navgiationMan;
+
+<PageTitle>CLUB OYSTER</PageTitle>
+
+<div class="page">
+    <div class="sidebar" style="display:none" id="sidebar-id">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4" style="display:none" id="top-row-id">
+            <a @onclick="Profile" style="color:white; font-size:25px" class="fw-bold">Профиль</a>
+            <a target="_blank" @onclick="Logout" style="color:white; font-size:25px" class="fw-bold">Выход</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private void Logout()
+    {
+        navgiationMan.NavigateTo("/");
+        jsRun.InvokeVoidAsync("CloseTowRow");
+        jsRun.InvokeVoidAsync("CloseSideBar");
+        jsRun.InvokeVoidAsync("CloseNavBar");
+        jsRun.InvokeVoidAsync("CloseNavMenu");
+        jsRun.InvokeVoidAsync("CloseYprav");
+        jsRun.InvokeVoidAsync("CloseYpravEmployee");
+    }
+
+    private void Profile()
+    {
+        navgiationMan.NavigateTo("/profile");
+    }
+}

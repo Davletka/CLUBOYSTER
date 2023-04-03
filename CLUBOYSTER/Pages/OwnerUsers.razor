@@ -1,0 +1,15 @@
+﻿@page "/ownerpanel"
+@using CLUBOYSTER.Data
+@inject UserService usersService
+
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        if (usersService.GetUsers().Count == 0)
+        {
+            usersService.SetUsers();
+        }
+    }
+}
+<UsersTable users="usersService.GetUsers()"></UsersTable>

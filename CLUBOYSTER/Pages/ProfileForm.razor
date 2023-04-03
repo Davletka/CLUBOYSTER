@@ -1,0 +1,123 @@
+﻿@page "/profile"
+@inject UserService userService;
+@using CLUBOYSTER.Data
+@inject IWebHostEnvironment Environment
+@using System.ComponentModel.DataAnnotations;
+@inject IJSRuntime jsRun;
+@inject NavigationManager navMan
+
+<PageTitle>Your Profile</PageTitle>
+@if (user.GetType().Name == "User")
+{
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand fw-bold fs-2">CLUB OYSTER</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item fw-bold"><a class="nav-link" href="/mainpage" aria-current="page">Главная страница</a></li>
+                        <li class="nav-item fw-bold"><a class="nav-link" href="/profile">Профиль</a></li>
+                        <li class="nav-item fw-bold"><a class="nav-link" @onclick="Logout">Выход</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav> 
+}
+
+
+<section class="h-100 bg-black">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card">
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+                        <div class="ms-3 mt-2 d-flex flex-column" style="width: 170px;">
+                            <img src="@pathPhoto"
+                                 alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                 style="width: 150px; z-index: 0">
+                            <button type="button" class="btn btn-outline-dark fw-bold" @onclick="EditProfile" data-mdb-ripple-color="dark"
+                                    style="z-index: 0;">
+                                Edit profile
+                            </button>
+                            <strong class="text-black fw-bold">@message</strong>
+                        </div>
+                        <div class="ms-3" style="margin-top: 130px;">
+                            <h3 class="fw-bold fs-3">@user.FirstName</h3>
+                        </div>
+                    </div>
+                    <div class="p-4 text-black" style="background-color: white;">
+
+                    </div>
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5 py-5">
+                            <p class="lead fw-normal mb-1 fw-bold">Информация</p>
+                            <div class="p-4 h-75" style="background-color: white;">
+                                <label class="font-italic fw-bold">Фамилия:</label>
+                                <input class="font-italic mb-2 fw-bold" @bind="@user.SecondName" placeholder="Введите вашу фамилию" disabled="@dis">@user.SecondName</input>
+                                <label class="font-italic fw-bold">Имя:</label>
+                                <input class="font-italic mb-2 fw-bold" @bind="@user.FirstName" placeholder="Введите ваше имя" disabled="@dis">@user.FirstName</input>
+                                <label class="font-italic fw-bold">Отчество:</label>
+                                <input class="font-italic mb-2 fw-bold" @bind="@user.Surname" placeholder="Введите ваше отчество" disabled="@dis">@user.Surname</input>
+                                <label class="font-italic fw-bold">Почта:</label>
+                                <input id="emailInput" class="font-italic mb-2 fw-bold" @bind="@user.Email" disabled="@dis">@user.Email</input>
+                                <label class="font-italic fw-bold">Телефон:</label>
+                                <input class="font-italic mb-2 fw-bold" maxlength="11" @bind="@user.Phone" disabled="@dis">@user.Phone</input>
+
+                                @if (user.GetType().Name == "Employee")
+                                {
+                                    <label class="font-italic fw-bold">Роль:</label>
+                                    <input class="font-italic mb-2 fw-bold" @bind="(user as Employee).Role" disabled="disabled">
+                                    <label class="font-italic fw-bold">Оклад:</label>
+                                    <input class="font-italic mb-2 fw-bold" @bind="(user as Employee).Salary" disabled="disabled">
+                                    <label class="font-italic fw-bold">Начало работы:</label>
+                                    <input class="font-italic mb-2 fw-bold" @bind="(user as Employee).StartWork" disabled="disabled">
+                                    <label class="font-italic fw-bold">Конец работы:</label>
+                                    <input class="font-italic mb-2 fw-bold" @bind="(user as Employee).EndWork" disabled="disabled">
+                                }
+                            </div>
+                            <button type="button" class="btn btn-outline-dark fw-bold" hidden="@hid" @onclick="SaveProfile" data-mdb-ripple-color="dark"
+                                    style="z-index: 0;">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    User user = new User();
+    bool dis = true;
+    bool hid = true;
+    private string? message;
+    string pathPhoto = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjvJKg6aXJNnwv4EpwvCyU-E7gOXGlS_TCygX4YhPpQ4cObKtqPdn_OrDE_c5RwwCdYW0&usqp=CAU";
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = userService.Get();
+    }
+
+    private void EditProfile()
+    {
+        dis = !dis;
+        hid = !hid;
+    }
+    private void SaveProfile()
+    {
+        MongoDb.ReplaceByName(user, user.Login);
+        hid = true;
+        dis = true;
+    }
+
+    private void Logout()
+    {
+        navMan.NavigateTo("/");
+        jsRun.InvokeVoidAsync("CloseTowRow");
+        jsRun.InvokeVoidAsync("CloseSideBar");
+        jsRun.InvokeVoidAsync("CloseNavBar");
+        jsRun.InvokeVoidAsync("CloseNavMenu");
+        jsRun.InvokeVoidAsync("CloseYprav");
+    }
+}
