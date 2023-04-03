@@ -7,7 +7,7 @@
         public static float? TotalGrowth { get; set; }
 
         public static float? TotalCustomers { get; set; }
-
+        //
         public static float? AverageMonth { get; set; } = TotalEarning ;
     }
 }
