@@ -2,12 +2,10 @@
 {
     public class Club
     {
-        public static float? TotalEarning { get; set; }
+        public float? TotalEarning { get; set; }
 
-        public static float? TotalGrowth { get; set; }
+        public float? TotalCustomers { get; set; }
 
-        public static float? TotalCustomers { get; set; }
-        //
-        public static float? AverageMonth { get; set; } = TotalEarning ;
+        public float? AverageMonth { get; set; }
     }
 }

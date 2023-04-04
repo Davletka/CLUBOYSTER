@@ -12,6 +12,22 @@ namespace CLUBOYSTER.Data
             collection.InsertOne(user);
         }
 
+        public static void AddTransaction(Transactions transaction)
+        {
+            var client = new MongoClient();
+            var dataBase = client.GetDatabase("ClubOyzer");
+            var collection = dataBase.GetCollection<Transactions>("Transactions");
+            collection.InsertOne(transaction);
+        }
+
+        public static void AddStatic(Club club)
+        {
+            var client = new MongoClient();
+            var dataBase = client.GetDatabase("ClubOyzer");
+            var collection = dataBase.GetCollection<Club>("Club");
+            collection.InsertOne(club);
+        }
+
         public static List<User> FindUsers()
         {
             var client = new MongoClient();

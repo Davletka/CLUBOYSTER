@@ -1,7 +1,10 @@
 ﻿@page "/mainpage"
-
+@using CLUBOYSTER.Data
 @inject IJSRuntime jsRun;
 @inject NavigationManager navMan
+
+@inject UserService userService;
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +37,7 @@
         <!-- Header - set the background image for the header in the line below-->
         <header class="py-5 bg-image-full" style="background-image: url('https://celes.club/uploads/posts/2022-11/1667291669_20-celes-club-p-fon-v-klube-pinterest-20.jpg')">
             <div class="text-center my-5">
-                <img class="img-fluid rounded-circle mb-4" style="width:400px; height:auto" src="css/Images/FinalLogo-transformed.png" alt="..." />
+                <img class="img-fluid rounded-circle mb-4" style="width:350px; height:auto" src="css/Images/FinalLogo-transformed.png" alt="..." />
                 <h1 class="text-white fs-3 fw-bolder">Отдых со вкусом.</h1>
 
             </div>
@@ -65,8 +68,14 @@
                         <p class="lead text-white fs-2">@date.ToString("dd.MM.yyyy")</p>
                         <p class="mb-0 text-white fs-3">Проведи вечер с комфортом.</p>
                         <label></label>
-                        <button class="btn btn-outline-light fw-bold border-3 m-2" type="button">Купить</button>
+                    <button class="btn btn-outline-light fw-bold border-3 m-2" @onclick="BuyTicket" type="button">Купить</button>
                     </div>
+                @if (message != null)
+                {
+                    <blockquote style="color:white; text-align:center;  top:100px; line-height: 4; font-size:30px" class="fw-bold">
+                        <strong>@message</strong>
+                    </blockquote>
+                }
                 </div>
             </div>
         </section>
@@ -79,6 +88,21 @@
 @code {
     private DateTime date = DateTime.Now;
 
+    private string? message;
+    private Club? club;
+
+    private User? user;
+
+    private List<User> users;
+
+    private Transactions? transactions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = MongoDb.FindUsers().Where(x => x.GetType().Name == "User").ToList();
+        user = userService.Get();
+    }
+
     private void Logout()
     {
         navMan.NavigateTo("/");
@@ -88,5 +112,27 @@
         jsRun.InvokeVoidAsync("CloseNavMenu");
         jsRun.InvokeVoidAsync("CloseYprav");
     }
+
+    private async void BuyTicket()
+    {
+        transactions = new Transactions()
+        {
+            Type = "Доход",
+            Time = date,
+            User = user,
+            Sum = 750,
+        };
+
+        club = new Club()
+        {
+            TotalEarning = transactions.Sum,
+            AverageMonth = transactions.Sum,
+            TotalCustomers = users.Count,
+        };
+
+
+        message = "Покупка завершена";
+        MongoDb.AddTransaction(transactions);
+        MongoDb.AddStatic(club);
     }
 }
