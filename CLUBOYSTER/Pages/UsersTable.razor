@@ -12,7 +12,7 @@ else
 {
     <h2 class="fw-bold text-white">Таблица пользователей</h2>
     <div style="height:auto; width:95%; align-content:center">
-    <table class="table table-dark fw-bold border-2">
+    <table class="table table-dark fw-bold border-2" style="height:auto;">
       <thead class="thead-dark">
         <tr>
           <th scope="col">Логин</th>
@@ -32,7 +32,7 @@ else
                         <td>@item.Login</td>
                         <td>@item.FirstName</td>
                         <td>@item.Email</td>
-                        <td><input id="name" type="text" placeholder="Введите роль" class="font-italic mb-2 fw-bold text-white" @bind="_role"></input></td>
+                        <td><input id="name" type="text" placeholder="Введите роль" class="font-italic mb-2 fw-bold text-white"  @onchange="()=>fieldRole(item)"></input></td>
                         <td><input id="name" type="text" placeholder="Введите оклад" class="fw-bold font-italic mb-2 text-white" @bind="_salary"></input></td>
                         <td><button type="button" class="btn btn-outline-light w-100 fw-bold" style="margin-top:0" @onclick="() => EmploeeGo(item)" data-mdb-ripple-color="dark">Добавить</button></td>
                     </tr>
@@ -55,6 +55,11 @@ else
     private DateTime start;
     private DateTime end;
 
+    private void fieldRole(User user)
+    {
+        
+    }
+
     private async Task EmploeeGo(User user)
     {
         if (_role != null && _salary != null)
@@ -65,11 +70,12 @@ else
                     start = DateTime.Now.AddDays(2);
                     end = start.AddHours(5);
                     break;
-                case "Сис-Амдин":
+                case "Менеджер по закупкам":
                     start = DateTime.Now.AddDays(5);
                     end = start.AddHours(8);
                     break;
             }
+
             users.Remove(user);
             user = new Employee()
                 {

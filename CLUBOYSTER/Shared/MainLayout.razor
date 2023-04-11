@@ -12,8 +12,8 @@
 
     <main>
         <div class="top-row px-4" style="display:none" id="top-row-id">
-            <a @onclick="Profile" style="color:white; font-size:25px" class="fw-bold">Профиль</a>
-            <a target="_blank" @onclick="Logout" style="color:white; font-size:25px" class="fw-bold">Выход</a>
+            <a @onclick="Profile" style="color:white; font-size:25px; cursor:pointer" class="fw-bold">Профиль</a>
+            <a target="_blank" @onclick="Logout" style="color:white; font-size:25px; cursor:pointer" class="fw-bold">Выход</a>
         </div>
 
         <article class="content px-4">
@@ -32,6 +32,7 @@
         jsRun.InvokeVoidAsync("CloseNavMenu");
         jsRun.InvokeVoidAsync("CloseYprav");
         jsRun.InvokeVoidAsync("CloseYpravEmployee");
+        jsRun.InvokeVoidAsync("CloseProviders");
     }
 
     private void Profile()

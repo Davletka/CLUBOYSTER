@@ -1,9 +1,12 @@
-﻿<div class="card shadow border-left-success py-2">
+﻿@using CLUBOYSTER.Data;
+@inject UserService userSer;
+
+<div class="card shadow border-left-success py-2">
     <div class="card-body">
         <div class="row align-items-center no-gutters">
             <div class="col mr-2">
                 <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Всего доход</span></div>
-                <div class="text-dark font-weight-bold h5 mb-0"><span>₽20000</span></div>
+                <div class="text-dark font-weight-bold h5 mb-0"><span>₽@((owner as Owner).TotalEarning)</span></div>
             </div>
             <div class="col-auto"><span class="fs-1 text-black-300"></span></div>
         </div>
@@ -11,5 +14,10 @@
 </div>
 
 @code {
+    private User? owner;
 
+    protected override async Task OnInitializedAsync()
+    {
+        owner = MongoDb.FindOwner();
+    }
 }

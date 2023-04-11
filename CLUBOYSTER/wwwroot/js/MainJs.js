@@ -46,3 +46,10 @@ function OpenYpravEmployee() {
 function CloseYpravEmoloyee() {
     document.getElementById('ypravemployee-id').style.display = "none"
 }
+function OpenProviders() {
+    document.getElementById('providers-id').style.display = "block"
+}
+
+function CloseProviders() {
+    document.getElementById('providers-id').style.display = "none"
+}

@@ -76,29 +76,31 @@
                         <strong>@message</strong>
                     </blockquote>
                 }
-                </div>
             </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white fw-bold fs-5">Copyright. BLUE OYSTER</p></div>
-        </footer>
-    </body>
+        </div>
+    </section>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white fw-bold fs-5">Copyright. BLUE OYSTER</p></div>
+    </footer>
+</body>
 </html>
 @code {
     private DateTime date = DateTime.Now;
 
     private string? message;
-    private Club? club;
 
     private User? user;
 
-    private List<User> users;
+    private User? owner;
+
+    private List<User>? users;
 
     private Transactions? transactions;
 
     protected override async Task OnInitializedAsync()
     {
+        owner = MongoDb.FindOwner();
         users = MongoDb.FindUsers().Where(x => x.GetType().Name == "User").ToList();
         user = userService.Get();
     }
@@ -113,26 +115,31 @@
         jsRun.InvokeVoidAsync("CloseYprav");
     }
 
-    private async void BuyTicket()
+    private void BuyTicket()
     {
         transactions = new Transactions()
-        {
-            Type = "Доход",
-            Time = date,
-            User = user,
-            Sum = 750,
-        };
+            {
+                Type = "Доход",
+                Time = date,
+                User = user,
+                Sum = 750,
+            };
 
-        club = new Club()
-        {
-            TotalEarning = transactions.Sum,
-            AverageMonth = transactions.Sum,
-            TotalCustomers = users.Count,
-        };
-
-
+        owner = new Owner()
+            {
+                FirstName = owner.FirstName,
+                SecondName = owner.SecondName,
+                Surname = owner.Surname,
+                Phone = owner.Phone,
+                Email = owner.Email,
+                Login = owner.Login,
+                Password = owner.Password,
+                TotalEarning = transactions.Sum.Value + (owner as Owner).TotalEarning,
+                AverageMonth = transactions.Sum.Value + (owner as Owner).AverageMonth,
+                TotalCustomers = (owner as Owner).TotalCustomers,
+            };
+        MongoDb.ReplaceOwner(owner);
         message = "Покупка завершена";
         MongoDb.AddTransaction(transactions);
-        MongoDb.AddStatic(club);
     }
 }

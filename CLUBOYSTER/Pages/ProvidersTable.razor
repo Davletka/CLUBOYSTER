@@ -1,0 +1,15 @@
+﻿@page "/providerstable"
+
+@using CLUBOYSTER.Data;
+
+@inject ProvidersService serviceProv
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (serviceProv.GetUsers().Count == 0)
+        {
+            serviceProv.SetUsers();
+        }
+    }
+}
+<PrrovidersLego providers="serviceProv.GetUsers()"></PrrovidersLego>

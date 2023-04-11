@@ -11,7 +11,7 @@
 <EditForm Model="userModel" style="height:auto;">
     <DataAnnotationsValidator/>
     <div class="align-content-center" style="text-align:center">
-        <a class="navbar-brand fw-bold fs-2 m-3" style="color:white">BLUE OYSTER</a>
+        <a class="navbar-brand fw-bold fs-2 m-3" style="color:white">CLUB OYSTER</a>
         <label></label>
     </div>
     <h3 class="h3 fs-4 fw-bold">Авторизация</h3>
@@ -24,18 +24,19 @@
     <ValidationMessage class="fw-bold" For="() => userModel.Password" />
 
     <button type="button" style="border-radius: 20px" class="fw-bold" @onclick="Autorizaiton">Войти</button>
+    <label></label>
+
+    @if (check == true)
+    {
+        <div style="text-align:center;" class="fw-bold bg-danger">
+            <strong>@exeption</strong>
+        </div>
+    }
             <label></label>
             <div style="text-align:center">
               <p class="mb-0 text-white fw-bold">У вас не имеется аккаунта? <a href="/registration" class="text-white-50 fw-bold"> Регистрация</a>
               </p>
             </div>
-
-    @if (check == true)
-    {
-        <blockquote style="color:white; text-align:center;  top:100px; line-height: 4" class="fw-bold">
-            <strong>@exeption</strong>
-        </blockquote>
-    }
 
 </EditForm>
 
@@ -72,6 +73,7 @@
                             jsRun.InvokeVoidAsync("OpenNavMenu");
                             jsRun.InvokeVoidAsync("OpenYprav");
                             jsRun.InvokeVoidAsync("OpenYpravEmployee");
+                            jsRun.InvokeVoidAsync("OpenProviders");
                             break;
                         case "Employee":
                             navigationManager.NavigateTo("/main");

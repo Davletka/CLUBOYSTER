@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<UserService>();
-
+builder.Services.AddSingleton<ProvidersService>();
+builder.Services.AddSingleton<FileSystemService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

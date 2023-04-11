@@ -1,0 +1,55 @@
+﻿@page "/providers"
+@using CLUBOYSTER.Data;
+
+<PageTitle>Добавление поставщиков</PageTitle>
+
+<EditForm Model="provider" style="height:auto; border-radius: 10px;">
+    <DataAnnotationsValidator /><ProvidersPage />
+
+    <h3 class="h3 fw-bold" style="line-height:1.4; margin-bottom:1.8rem">Добавить поставщика</h3>
+
+    <InputText id="name" type="text" placeholder="Имя поставщика" class="fw-bold" @bind-Value="provider.FirstName"></InputText>
+    <ValidationMessage For="() => provider.FirstName" />
+
+    <InputText id="name" type="text" placeholder="Фамилия поставщика" class="fw-bold" @bind-Value="provider.SecondName"></InputText>
+    <ValidationMessage For="() => provider.SecondName" />
+
+    <InputText id="name" type="text" placeholder="Отчество поставщика" class="fw-bold" @bind-Value="provider.Surname"></InputText>
+    <ValidationMessage For="() => provider.Surname" />
+
+    <InputText id="name" type="text" placeholder="Номер телефона" class="fw-bold" maxlength="11" @bind-Value="provider.Phone"></InputText>
+    <ValidationMessage For="() => provider.Phone" />
+    <label></label>
+    <h5 class="fw-bold">Договор оформлен?</h5>
+
+    <input type="checkbox" style="width:20px; height:20px" @bind="@isChecked"/>
+
+    <button type="button" style="height:40px; border-radius: 20px;" class="fw-bold" @onclick="AddProvider">Добавить</button>
+
+</EditForm>
+
+@code {
+    Providers provider = new Providers();
+
+    private bool? isChecked = false;
+
+    private void AddProvider()
+    {
+        provider = new Providers()
+        {
+            FirstName = provider.FirstName,
+            SecondName = provider.SecondName,
+            Surname = provider.Surname,
+            Phone = provider.Phone,
+            Document = isChecked
+        };
+
+        MongoDb.AddProvider(provider);
+
+        provider.FirstName = null;
+        provider.SecondName = null;
+        provider.Surname = null;
+        provider.Phone = null;
+        isChecked = false;
+    }
+}

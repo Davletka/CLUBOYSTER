@@ -28,15 +28,18 @@
 
     <button type="button" style="height:35; border-radius: 20px;" class="fw-bold" @onclick="Registration">Зарегистрироваться</button>
     <label></label>
+
+    @if (check == true)
+    {
+        <div style="text-align:center">
+            <strong class="text-center bg-danger fw-bold">@exeption</strong>
+        </div>
+    }
+    <label></label>
     <div style="text-align:center">
         <p class="mb-0 text-white fw-bold">Есть аккаунт? <a href="" class="text-white-50 fw-bold"> Авторизация</a>
         </p>
     </div>
-
-    @if (check == true)
-    {
-        <strong class="text-center fw-bold">@exeption</strong>
-    }
 
 </EditForm>
 
@@ -46,9 +49,15 @@
 
     private string? ConfirmPassword_;
 
-    private bool? check;
+    private bool? check = false;
     private string? exeption;
 
+    private User? owner;
+
+    protected override async Task OnInitializedAsync()
+    {
+        owner = MongoDb.FindOwner();
+    }
     private void Registration()
     {
         var users = MongoDb.FindUsers();
@@ -61,18 +70,24 @@
                 {
                     if (item.Login == userModel.Login)
                     {
+                        check = true;
+                        exeption = "Такой логин уже существует";
                         return;
                     }
                     else
                     {
                         if (item.Email == userModel.Email)
                         {
+                            check = true;
+                            exeption = "Такая почта уже существует";
                             return;
                         }
                         else
                         {
                             if (item.Phone == userModel.Phone)
                             {
+                                check = true;
+                                exeption = "Такой телефон уже существует";
                                 return;
                             }
                         }
@@ -87,9 +102,34 @@
                     Email = userModel.Email,
                     Password = userModel.Password
                 };
+
+                owner = new Owner()
+                    {
+                        FirstName = owner.FirstName,
+                        SecondName = owner.SecondName,
+                        Surname = owner.Surname,
+                        Phone = owner.Phone,
+                        Email = owner.Email,
+                        Login = owner.Login,
+                        Password = owner.Password,
+                        TotalCustomers = 1 + (owner as Owner).TotalCustomers,
+                        TotalEarning = (owner as Owner).TotalEarning,
+                        AverageMonth = (owner as Owner).AverageMonth,
+                    };
+                MongoDb.ReplaceOwner(owner);
                 MongoDb.AddDb(newUser);
                 navigationManager.NavigateTo("");
             }
+            else
+            {
+                check = true;
+                exeption = "Пароли не совпадают";
+            }
+        }
+        else
+        {
+            check = true;
+            exeption = "Заполните поля";
         }
     }
 }

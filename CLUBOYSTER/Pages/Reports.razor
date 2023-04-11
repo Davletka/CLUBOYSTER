@@ -1,0 +1,59 @@
+﻿@page "/reports"
+@using System;
+@using System.IO;
+@using CLUBOYSTER.Data;
+@using System.Text;
+@inject FileSystemService fileSysServ;
+
+<div class="row" style="justify-content:center; text-align:center; width:100%; height:auto">
+
+    <h1 class="fw-bold text-white">Генерация отчёта</h1>
+    <label class="font-italic fw-bold text-white">Начало месяца</label>
+    <input style="width:50%; align-content:center" type="date" class="font-italic mb-2 fw-bold text-black bg-light" @bind="start" />
+
+    <label class="font-italic fw-bold text-white">Конец месяца</label>
+    <input style="width:50%;" type="date" class="font-italic mb-2 fw-bold text-black bg-light" @bind="end" />
+
+    <label  class="font-italic fw-bold text-white">Доход за месяц</label>
+    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black к bg-light" />
+
+    <label class="font-italic fw-bold text-white">Расходов за месяц</label>
+    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black bg-light"/>
+
+    <label class="font-italic fw-bold text-white">Сотрудник:</label>
+    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black bg-light" />
+</div>
+
+<div class="text-center" style="width:100%; height:auto; justify-content:center">
+    <button type="button" style="width:50%; height:auto" class="btn btn-outline-light fw-bold" @onclick="CreateReport" data-mdb-ripple-color="light">
+        Создать отчёт
+    </button>
+
+    <button type="button" style="width:50%; height:auto" class="btn btn-outline-light fw-bold" @onclick="DownLoad" data-mdb-ripple-color="light">
+        Загрузить
+    </button>
+</div>
+<label></label>
+<h1 class="text-white fw-bold text-center">Предыдущие отчёты</h1>
+
+@code {
+    private DateTime? start;
+    private DateTime? end;
+
+    private IBrowserFile file;
+
+    private string path = @"C:\1.txt";
+
+    private string text = $"Итоговый отчёт корпорации CLUB OYSTER. Итоговый доход за месяц составляет:, итоговые расходы:";
+
+    private async void CreateReport()
+    {
+        fileSysServ.UploadToDb(text);
+    }
+
+    private async void DownLoad()
+    {
+        await using (FileStream fs = new FileStream("Report_2", FileMode.OpenOrCreate))
+        fileSysServ.Download("Report_1", fs);
+    }
+}
