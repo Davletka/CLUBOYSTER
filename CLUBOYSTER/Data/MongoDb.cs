@@ -93,5 +93,15 @@ namespace CLUBOYSTER.Data
             var collection = database.GetCollection<User>("Users");
             collection.ReplaceOne(x => x.Login == "Davletka", member);
         }
+
+        public static List<string> FindReports()
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("ClubOyzer");
+            var collection = database.GetCollection<string>("fs.files");
+            var list = collection.Find(x => true).ToList();
+
+            return list;
+        }
     }
 }

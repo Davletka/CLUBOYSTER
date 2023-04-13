@@ -32,8 +32,8 @@ else
                         <td>@item.Login</td>
                         <td>@item.FirstName</td>
                         <td>@item.Email</td>
-                        <td><input id="name" type="text" placeholder="Введите роль" class="font-italic mb-2 fw-bold text-white"  @onchange="()=>fieldRole(item)"></input></td>
-                        <td><input id="name" type="text" placeholder="Введите оклад" class="fw-bold font-italic mb-2 text-white" @bind="_salary"></input></td>
+                        <td><input id="name" type="text" placeholder="Введите роль" class="font-italic mb-2 fw-bold text-white" @bind-value="_role"/></td>
+                        <td><input id="name" type="text" placeholder="Введите оклад" class="fw-bold font-italic mb-2 text-white" @bind-value="_salary"></input></td>
                         <td><button type="button" class="btn btn-outline-light w-100 fw-bold" style="margin-top:0" @onclick="() => EmploeeGo(item)" data-mdb-ripple-color="dark">Добавить</button></td>
                     </tr>
                 }

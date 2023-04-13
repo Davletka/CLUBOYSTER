@@ -4,6 +4,7 @@
 @using CLUBOYSTER.Data;
 @using System.Text;
 @inject FileSystemService fileSysServ;
+@using MongoDB.Driver.GridFS;
 
 <div class="row" style="justify-content:center; text-align:center; width:100%; height:auto">
 
@@ -15,13 +16,19 @@
     <input style="width:50%;" type="date" class="font-italic mb-2 fw-bold text-black bg-light" @bind="end" />
 
     <label  class="font-italic fw-bold text-white">Доход за месяц</label>
-    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black к bg-light" />
+    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black к bg-light" @bind-value="doxod" />
 
     <label class="font-italic fw-bold text-white">Расходов за месяц</label>
-    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black bg-light"/>
+    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black bg-light" @bind-value="rashod"/>
 
     <label class="font-italic fw-bold text-white">Сотрудник:</label>
-    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black bg-light" />
+    <select style="width:50%; height:40px" @onchange="Selected" class="font-italic mb-2 fw-bold text-black bg-light">
+
+        @foreach (var item in employees)
+        {
+            <option value="@item.SecondName @item.FirstName">@item.FirstName @item.SecondName</option>
+        }
+    </select>
 </div>
 
 <div class="text-center" style="width:100%; height:auto; justify-content:center">
@@ -29,31 +36,74 @@
         Создать отчёт
     </button>
 
-    <button type="button" style="width:50%; height:auto" class="btn btn-outline-light fw-bold" @onclick="DownLoad" data-mdb-ripple-color="light">
-        Загрузить
-    </button>
 </div>
 <label></label>
 <h1 class="text-white fw-bold text-center">Предыдущие отчёты</h1>
+
+
+@foreach(var file in files)
+{
+    <div class="card" style="width: 18rem; justify-content:center; border-radius:20px; align-content:center; left:40%">
+        <img src="https://cdn-icons-png.flaticon.com/512/118/118098.png" class="card-img-top" style="width:160px; height:180px; text-align:center; margin:20px" alt="...">
+        <div class="card-body">
+            <h5 class="card-title fw-bold" style="text-align:center">@file.Filename</h5>
+            <button type="button" style="width:100px; height:50px; text-align:center" class="btn btn-outline-dark fw-bold" @onclick="() => DownLoadFile(file.Filename)" data-mdb-ripple-color="dark">Скачать</button>
+        </div>
+    </div>
+    <label></label>
+}
+
 
 @code {
     private DateTime? start;
     private DateTime? end;
 
-    private IBrowserFile file;
+    private string? namereport;
 
-    private string path = @"C:\1.txt";
+    private string? doxod;
 
-    private string text = $"Итоговый отчёт корпорации CLUB OYSTER. Итоговый доход за месяц составляет:, итоговые расходы:";
+    private string? rashod;
+
+    private string path = @"C:\";
+
+    private string text;
+
+    List<User>? employees;
+
+    List<Transactions> transactions;
+
+    List<GridFSFileInfo> files;
+
+    private string? FS;
+
+    protected override async Task OnInitializedAsync()
+    {
+        files = fileSysServ.FindFiles();
+
+        employees = MongoDb.FindUsers().Where(x => x.GetType().Name == "Employee").ToList();
+
+        transactions = MongoDb.FindOperations();
+    }
+
+    private void Selected(ChangeEventArgs e)
+    {
+        FS = e.Value.ToString();
+    }
 
     private async void CreateReport()
     {
-        fileSysServ.UploadToDb(text);
+        foreach(var item in transactions)
+        {
+            text = $"Итоговый отчёт корпорации CLUB OYSTER. \n Отчёт составлял {FS}. \r\n Итоговый доход за месяц составляет: {doxod} рублей ₽, итоговые расходы: {rashod} рублей ₽. \r\r\r\r\n Дата начала месяца {start.Value.ToString("yyyy-MM-dd")}                                       Дата окончания месяца {end.Value.ToString("yyyy-MM-dd")}";
+        }
+
+        namereport = $"Отчёт_{end.Value.Year}_{end.Value.Month}_{end.Value.Day}";
+
+        fileSysServ.UploadToDb(text, namereport);
     }
 
-    private async void DownLoad()
+    private void DownLoadFile(string nameFile)
     {
-        await using (FileStream fs = new FileStream("Report_2", FileMode.OpenOrCreate))
-        fileSysServ.Download("Report_1", fs);
+        fileSysServ.Download(path, nameFile);
     }
 }
