@@ -29,7 +29,7 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item fw-bold"><a class="nav-link" href="/mainpage" aria-current="page">Главная страница</a></li>
                         <li class="nav-item fw-bold"><a class="nav-link" href="/profile">Профиль</a></li>
-                        <li class="nav-item fw-bold"><a class="nav-link" @onclick="Logout">Выход</a></li>
+                        <li class="nav-item fw-bold"><a class="nav-link" @onclick="Logout" style="cursor:pointer">Выход</a></li>
                     </ul>
                 </div>
             </div>
@@ -80,8 +80,52 @@
         </div>
     </section>
     <!-- Footer-->
-    <footer class="py-5 bg-dark">
-        <div class="container"><p class="m-0 text-center text-white fw-bold fs-5">Copyright. BLUE OYSTER</p></div>
+    <footer class="text-center text-white bg-dark">
+        <!-- Grid container -->
+        <div class="container pt-4">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+                <!-- Facebook -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/free-icon-instagram-1384063.png" style="width:50px; height:50px"/>
+                </a>
+
+                <!-- Twitter -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/twitter.png" style="width:50px; height:50px" />
+                </a>
+
+                <!-- Google -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/free-icon-google-symbol-2875404.png" style="width:50px; height:50px" />
+                </a>
+
+                <!-- Instagram -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/facebook.png" style="width:50px; height:50px" />
+                </a>
+            </section>
+            <!-- Section: Social media -->
+        </div>
+        <!-- Grid container -->
+        <!-- Copyright -->
+        <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2023 Copyright:
+            <a class="text-white" href="https://mdbootstrap.com/">CLUBOYSTER.com</a>
+        </div>
+        <!-- Copyright -->
     </footer>
 </body>
 </html>

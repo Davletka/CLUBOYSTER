@@ -10,12 +10,10 @@ namespace CLUBOYSTER.Data
         [BsonIgnoreIfDefault]
         ObjectId _id;
 
+        [BsonIgnoreIfDefault]
         public string? Name { get; set; }
-        
-        public int? Count { get; set; }
+        [BsonIgnoreIfDefault]
 
         public float? Sum { get; set; }
-
-        public Providers? provider { get; set; }
     }
 }

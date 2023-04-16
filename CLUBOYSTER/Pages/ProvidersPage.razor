@@ -3,8 +3,8 @@
 
 <PageTitle>Добавление поставщиков</PageTitle>
 
-<EditForm Model="provider" style="height:auto; border-radius: 10px;">
-    <DataAnnotationsValidator /><ProvidersPage />
+<EditForm Model="provider" style="height:auto; border-radius: 10px; padding-top:35px">
+    <DataAnnotationsValidator />
 
     <h3 class="h3 fw-bold" style="line-height:1.4; margin-bottom:1.8rem">Добавить поставщика</h3>
 
@@ -19,8 +19,17 @@
 
     <InputText id="name" type="text" placeholder="Номер телефона" class="fw-bold" maxlength="11" @bind-Value="provider.Phone"></InputText>
     <ValidationMessage For="() => provider.Phone" />
+
+    <label class="fw-bold">Его поставки?</label>
+
+    <select style="width:100%; height:40px" class="font-italic mb-2 fw-bold text-black bg-light" >
+        @foreach (var item in products)
+        {
+            <option selected value="@item" class="text-black">@item.Name</option>
+        }
+    </select>
     <label></label>
-    <h5 class="fw-bold">Договор оформлен?</h5>
+    <label class="fw-bold">Договор оформлен?</label>
 
     <input type="checkbox" style="width:20px; height:20px" @bind="@isChecked"/>
 
@@ -31,7 +40,24 @@
 @code {
     Providers provider = new Providers();
 
+    List<Products>? products;
+
+    Products? activeProduct = new Products();
+
     private bool? isChecked = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = new List<Products>()
+        {
+            new Products() { Name="Коньяк", Sum = 15000 },
+            new Products() { Name="Виски", Sum = 22000 },
+            new Products() { Name="Пиво", Sum = 40000},
+            new Products() { Name="Шампанское", Sum = 19999 },
+            new Products() { Name="Закуски", Sum = 30000 },
+        };
+    }
+
 
     private void AddProvider()
     {
@@ -41,7 +67,8 @@
             SecondName = provider.SecondName,
             Surname = provider.Surname,
             Phone = provider.Phone,
-            Document = isChecked
+            Document = isChecked,
+            products = activeProduct,
         };
 
         MongoDb.AddProvider(provider);

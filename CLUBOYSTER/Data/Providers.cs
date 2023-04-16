@@ -30,5 +30,8 @@ namespace CLUBOYSTER.Data
 
         [Required(ErrorMessage = "Укажите активен ли договор")]
         public bool? Document { get; set; }
+
+        [BsonIgnoreIfDefault]
+        public Products? products { get; set; }  
     }
 }

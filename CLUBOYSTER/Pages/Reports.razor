@@ -16,7 +16,7 @@
     <input style="width:50%;" type="date" class="font-italic mb-2 fw-bold text-black bg-light" @bind="end" />
 
     <label  class="font-italic fw-bold text-white">Доход за месяц</label>
-    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black к bg-light" @bind-value="doxod" />
+    <input style="width:50%;" class="font-italic mb-2 fw-bold text-black к bg-light" @bind-value="doxod">
 
     <label class="font-italic fw-bold text-white">Расходов за месяц</label>
     <input style="width:50%;" class="font-italic mb-2 fw-bold text-black bg-light" @bind-value="rashod"/>
@@ -39,19 +39,27 @@
 </div>
 <label></label>
 <h1 class="text-white fw-bold text-center">Предыдущие отчёты</h1>
+<label></label>
 
-
+    <div class="container-fluid">
+    <div class="row" style="flex-wrap:wrap; display:flex;margin-right: -25px;
+    margin-left: -25px;">
+        <div class="row" style="justify-content:left;">
 @foreach(var file in files)
 {
-    <div class="card" style="width: 18rem; justify-content:center; border-radius:20px; align-content:center; left:40%">
-        <img src="https://cdn-icons-png.flaticon.com/512/118/118098.png" class="card-img-top" style="width:160px; height:180px; text-align:center; margin:20px" alt="...">
-        <div class="card-body">
-            <h5 class="card-title fw-bold" style="text-align:center">@file.Filename</h5>
-            <button type="button" style="width:100px; height:50px; text-align:center" class="btn btn-outline-dark fw-bold" @onclick="() => DownLoadFile(file.Filename)" data-mdb-ripple-color="dark">Скачать</button>
+    <div class="col-lg-6 col-xl-3 mb-4 ">
+        <div class="card" style="width: 18rem; justify-content:center; border-radius:20px; align-content:center; left:40%">
+            <img src="https://cdn-icons-png.flaticon.com/512/118/118098.png" class="card-img-top" style="width:160px; height:180px; text-align:center; margin:20px" alt="...">
+            <div class="card-body">
+                <h5 class="card-title fw-bold" style="text-align:center">@file.Filename</h5>
+                <button type="button" style="width:100px; height:50px; text-align:center" class="btn btn-outline-dark fw-bold" @onclick="() => DownLoadFile(file.Filename)" data-mdb-ripple-color="dark">Скачать</button>
+            </div>
         </div>
     </div>
-    <label></label>
 }
+        </div>
+    </div>
+</div>
 
 
 @code {
@@ -60,11 +68,11 @@
 
     private string? namereport;
 
-    private string? doxod;
+    private float? doxod = 0;
 
-    private string? rashod;
+    private float? rashod = 0;
 
-    private string path = @"C:\";
+    private string path;
 
     private string text;
 
@@ -74,15 +82,32 @@
 
     List<GridFSFileInfo> files;
 
+    User owner;
+
     private string? FS;
 
     protected override async Task OnInitializedAsync()
     {
         files = fileSysServ.FindFiles();
 
-        employees = MongoDb.FindUsers().Where(x => x.GetType().Name == "Employee").ToList();
-
         transactions = MongoDb.FindOperations();
+
+        foreach(var item in transactions)
+        {
+            if (item.Type == "Доход")
+            {
+                doxod = doxod + item.Sum;
+            }
+            else
+            {
+                rashod = item.Sum + rashod;
+            }
+
+        }
+
+        owner = MongoDb.FindOwner();
+
+        employees = MongoDb.FindUsers().Where(x => x.GetType().Name == "Employee").ToList();
     }
 
     private void Selected(ChangeEventArgs e)
@@ -104,6 +129,7 @@
 
     private void DownLoadFile(string nameFile)
     {
+        path = $@"C:\Reports\{nameFile}.txt";
         fileSysServ.Download(path, nameFile);
     }
 }
