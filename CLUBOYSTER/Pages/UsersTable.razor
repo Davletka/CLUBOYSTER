@@ -55,9 +55,9 @@ else
     private DateTime start;
     private DateTime end;
 
-    private void fieldRole(User user)
+    protected override async Task OnInitializedAsync()
     {
-        
+        users = MongoDb.FindUsers();    
     }
 
     private async Task EmploeeGo(User user)

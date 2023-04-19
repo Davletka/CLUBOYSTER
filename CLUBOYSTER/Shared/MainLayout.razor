@@ -2,37 +2,72 @@
 @using CLUBOYSTER.Data;
 @inject IJSRuntime jsRun;
 @inject NavigationManager navgiationMan;
+@inject UserService userSer;
 
 <PageTitle>CLUB OYSTER</PageTitle>
 
 <div class="page">
-    <div class="sidebar" style="display:none" id="sidebar-id">
-        <NavMenu />
-    </div>
+        @if (userSer.Get() != null)
+        {
+            @if (userSer.Get().GetType().Name == "Owner" || userSer.Get().GetType().Name == "Employee")
+            {
+            navMen = "block";
+            <div class="sidebar" style="display:@navMen" id="sidebar-id">
+                <NavMenu />
+            </div>
+            }
+            else
+            {
+                navMen = "none";
+            }
+
+        }
+        else
+        {
+            navMen = "none";
+        }
+
 
     <main>
-        <div class="top-row px-4" style="display:none" id="top-row-id">
+        @if (userSer.Get() != null)
+        {
+            if (userSer.Get().GetType().Name == "Owner" || userSer.Get().GetType().Name == "Employee")
+            {
+            mainLay = "flex";
+            <div class="top-row px-4" style="display:@mainLay" id="top-row-id">
             <a @onclick="Profile" style="color:white; font-size:20px; cursor:pointer; text-decoration:none" class="fw-bold">Личный кабинет</a>
             <a @onclick="Logout" style="color:white; font-size:20px; cursor:pointer; text-decoration:none" class="fw-bold">Выход из профиля</a>
-        </div>
+            </div>
+            }
+                    else
+        {
+            mainLay = "none";
+        }
 
-        <article class="content px-4">
+        }
+        else
+        {
+            mainLay = "none";
+        }
+
+            <article class="content px-4">
             @Body
         </article>
+
     </main>
 </div>
 
 @code {
+    private bool check = false;
+
+    private string navMen = "none";
+
+    private string mainLay = "none";
+
     private void Logout()
     {
         navgiationMan.NavigateTo("/");
-        jsRun.InvokeVoidAsync("CloseTowRow");
-        jsRun.InvokeVoidAsync("CloseSideBar");
-        jsRun.InvokeVoidAsync("CloseNavBar");
-        jsRun.InvokeVoidAsync("CloseNavMenu");
-        jsRun.InvokeVoidAsync("CloseYprav");
-        jsRun.InvokeVoidAsync("CloseYpravEmployee");
-        jsRun.InvokeVoidAsync("CloseProviders");
+        userSer.Remove();
     }
 
     private void Profile()

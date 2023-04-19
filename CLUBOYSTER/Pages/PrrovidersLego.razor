@@ -83,6 +83,8 @@
         owner = MongoDb.FindOwner();
         users = MongoDb.FindUsers().Where(x => x.GetType().Name == "Employee").ToList();
         user = userService.Get();
+
+        providers = MongoDb.FindProviders();
     }
 
     private void Buy()
@@ -92,7 +94,7 @@
                 Type = "Расход",
                 Time = DateTime.Now,
                 User = user,
-                Sum = rnd.Next(15000, 100000),
+                Sum = rnd.Next(5000, 10000),
             };
 
         owner = new Owner()

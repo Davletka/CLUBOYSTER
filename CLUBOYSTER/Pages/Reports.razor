@@ -5,6 +5,7 @@
 @using System.Text;
 @inject FileSystemService fileSysServ;
 @using MongoDB.Driver.GridFS;
+@inject NavigationManager nav;
 
 <div class="row" style="justify-content:center; text-align:center; width:100%; height:auto">
 
@@ -42,7 +43,7 @@
 <label></label>
 
     <div class="container-fluid">
-    <div class="row" style="flex-wrap:wrap; display:flex;margin-right: -25px;
+    <div class="row" style="flex-wrap:wrap; display:flex;margin-right: 25px;
     margin-left: -25px;">
         <div class="row" style="justify-content:left;">
 @foreach(var file in files)
@@ -51,7 +52,7 @@
         <div class="card" style="width: 18rem; justify-content:center; border-radius:20px; align-content:center; left:40%">
             <img src="https://cdn-icons-png.flaticon.com/512/118/118098.png" class="card-img-top" style="width:160px; height:180px; text-align:center; margin:20px" alt="...">
             <div class="card-body">
-                <h5 class="card-title fw-bold" style="text-align:center">@file.Filename</h5>
+                <h5 class="fw-bold">@file.Filename</h5>
                 <button type="button" style="width:100px; height:50px; text-align:center" class="btn btn-outline-dark fw-bold" @onclick="() => DownLoadFile(file.Filename)" data-mdb-ripple-color="dark">Скачать</button>
             </div>
         </div>
@@ -125,11 +126,13 @@
         namereport = $"Отчёт_{end.Value.Year}_{end.Value.Month}_{end.Value.Day}";
 
         fileSysServ.UploadToDb(text, namereport);
+
+        nav.NavigateTo("/reports");
     }
 
     private void DownLoadFile(string nameFile)
     {
-        path = $@"C:\Reports\{nameFile}.txt";
+        path = $@"C:\Users\79172\Desktop\Отчёты\{nameFile}.txt";
         fileSysServ.Download(path, nameFile);
     }
 }

@@ -17,6 +17,12 @@
             return user;
         }
 
+        public User Remove()
+        {
+            this.user = null;
+            return user;
+        }
+
         public List<User>? GetUsers()
         {
             return users;

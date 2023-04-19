@@ -36,9 +36,13 @@ else
 }
 
 @code {
-        [Parameter]
+    [Parameter]
     public List<User>? users { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        users = MongoDb.FindUsers();
+    }
 
     
     private async Task EmployeeDelete(User user)

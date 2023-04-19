@@ -54,13 +54,24 @@
 
     private User? owner;
 
+    List<User>? users;
+
     protected override async Task OnInitializedAsync()
     {
-        owner = MongoDb.FindOwner();
+        try
+        {
+                owner = MongoDb.FindOwner();
+        }
+        catch {}
+
     }
     private void Registration()
     {
-        var users = MongoDb.FindUsers();
+        try
+        {
+            users = MongoDb.FindUsers();
+        }
+        catch {};
 
         if (userModel.Login != null && userModel.FirstName != null && userModel.Phone != null && userModel.Email != null && userModel.Password != null && ConfirmPassword_ != null)
         {
@@ -103,7 +114,9 @@
                     Password = userModel.Password
                 };
 
-                owner = new Owner()
+                if(owner != null)
+                {
+                    owner = new Owner()
                     {
                         FirstName = owner.FirstName,
                         SecondName = owner.SecondName,
@@ -117,6 +130,8 @@
                         AverageMonth = (owner as Owner).AverageMonth,
                     };
                 MongoDb.ReplaceOwner(owner);
+                }
+
                 MongoDb.AddDb(newUser);
                 navigationManager.NavigateTo("");
             }
