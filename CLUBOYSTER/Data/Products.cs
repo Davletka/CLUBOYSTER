@@ -11,6 +11,9 @@ namespace CLUBOYSTER.Data
         ObjectId _id;
 
         [BsonIgnoreIfDefault]
+        public int ID { get; set; }
+
+        [BsonIgnoreIfDefault]
         public string? Name { get; set; }
         [BsonIgnoreIfDefault]
 

@@ -27,7 +27,7 @@
 
         @foreach (var item in employees)
         {
-            <option value="@item.SecondName @item.FirstName">@item.FirstName @item.SecondName</option>
+            <option value="@item.SecondName @item.FirstName" class="fw-bold">@item.FirstName @item.SecondName</option>
         }
     </select>
 </div>
@@ -43,7 +43,7 @@
 <label></label>
 
     <div class="container-fluid">
-    <div class="row" style="flex-wrap:wrap; display:flex;margin-right: 25px;
+    <div class="row" style="flex-wrap:wrap; display:flex; margin-right: 200px;
     margin-left: -25px;">
         <div class="row" style="justify-content:left;">
 @foreach(var file in files)

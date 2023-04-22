@@ -11,10 +11,11 @@
         {
             @if (userSer.Get().GetType().Name == "Owner" || userSer.Get().GetType().Name == "Employee")
             {
-            navMen = "block";
-            <div class="sidebar" style="display:@navMen" id="sidebar-id">
-                <NavMenu />
-            </div>
+
+                navMen = "block";
+                <div class="sidebar" style="display:@navMen" id="sidebar-id">
+                    <NavMenu />
+                </div>
             }
             else
             {
@@ -35,21 +36,25 @@
             {
             mainLay = "flex";
             <div class="top-row px-4" style="display:@mainLay" id="top-row-id">
-            <a @onclick="Profile" style="color:white; font-size:20px; cursor:pointer; text-decoration:none" class="fw-bold">Личный кабинет</a>
-            <a @onclick="Logout" style="color:white; font-size:20px; cursor:pointer; text-decoration:none" class="fw-bold">Выход из профиля</a>
+            <button type="button" class="btn btn-outline-light fw-bold" @onclick="Profile" data-mdb-ripple-color="light"
+                                    style="width:200px; margin-right:20px; margin-top:3px">
+                                Профиль
+                            </button>
+            <button type="button" class="btn btn-outline-light fw-bold" @onclick="Logout" data-mdb-ripple-color="light"
+                    style="width:200px; margin-right:20px; margin-top:3px">
+                Выйти
+            </button>
             </div>
             }
-                    else
-        {
-            mainLay = "none";
-        }
-
+            else
+            {
+                mainLay = "none";
+            }
         }
         else
         {
             mainLay = "none";
         }
-
             <article class="content px-4">
             @Body
         </article>

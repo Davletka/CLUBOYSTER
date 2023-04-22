@@ -20,13 +20,15 @@
                 </div>
             </div>
 
-        <div class="row" style="justify-content:center">
+            <label></label>
+
+        <div class="row" style="justify-content:center; margin-top:50px">
         <div class="col-lg-6 mb-2">
 <div class="card shadow">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="text-secondary font-weight-bold m-0 text-black fw-bold">Доходы и Расходы</h6>
+    <div class="card-header d-flex justify-content-center align-items-center bg-dark">
+        <h3 class="text-secondary font-weight-bold m-0 text-white fw-bold">Прибыль и убытки</h3>
     </div>
-    <div class="card-body fw-bold">
+    <div class="card-body fw-bold bg-dark">
         <Chart Config="_config"></Chart>
         <div class="chart-area fw-bold" style="display:none"><canvas id="chartCustomers"></canvas></div>
     </div>
@@ -82,8 +84,8 @@
                 {
                         BackgroundColor = new[]
                                 {
-                ColorUtil.ColorHexString(0, 255, 127),
-                ColorUtil.ColorHexString(0, 255, 255),
+                ColorUtil.ColorHexString(255, 255, 255),
+                ColorUtil.ColorHexString(0, 0, 0),
 
                     }
                 };

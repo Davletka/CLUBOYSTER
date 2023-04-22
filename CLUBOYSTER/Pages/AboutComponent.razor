@@ -1,0 +1,96 @@
+﻿@page "/about"
+
+@using CLUBOYSTER.Data;
+
+@inject NavigationManager navMan;
+@inject UserService userService;
+
+<PageTitle>About us</PageTitle>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-2">CLUB OYSTER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item fw-bold"><a class="nav-link" href="/mainpage" aria-current="page">Главная страница</a></li>
+                    <li class="nav-item fw-bold"><a class="nav-link" href="/profile">Профиль</a></li>
+                    <li class="nav-item fw-bold"><a class="nav-link" href="/about">О нас</a></li>
+                    <li class="nav-item fw-bold"><a class="nav-link" @onclick="Logout" style="cursor:pointer">Выход</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav> 
+
+
+<div class="text-white fw-bold" style="margin-top:40px; margin-left:40px; width:50%; height:400px">
+    <span style="font-size:50px">О компании</span>
+    <p style="font-size:20px">Наша организация приносит удовольствие с 2010 года. За всё это время мы <strong style="font-size:20px">прогрессировали</strong>, были изменены внешние факторы клуба, а также внутренние. </p> <p style="font-size:20px">Снаружи клуб выглядит как современное место отдыха для взрослых, своим внешним видом мы привлекаем новых клиентов, а также не упускаем старых. Внутри клуб координально изменился, вся архитектура была заменена на новую, техника, персонал, руководство. </p> <p style="font-size:35px"> Мы стали лучше, и собираемся продвигаться дальше!</p>
+</div>
+
+
+<footer class="text-center text-white bg-dark" style="margin-top:235px">
+        <!-- Grid container -->
+        <div class="container pt-4">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+                <!-- Facebook -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/free-icon-instagram-1384063.png" style="width:50px; height:50px"/>
+                </a>
+
+                <!-- Twitter -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/twitter.png" style="width:50px; height:50px" />
+                </a>
+
+                <!-- Google -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/free-icon-google-symbol-2875404.png" style="width:50px; height:50px" />
+                </a>
+
+                <!-- Instagram -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/facebook.png" style="width:50px; height:50px" />
+                </a>
+            </section>
+            <!-- Section: Social media -->
+        </div>
+        <!-- Grid container -->
+        <!-- Copyright -->
+        <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2023 Copyright:
+            <a class="text-white" href="https://mdbootstrap.com/">CLUBOYSTER.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+
+
+
+@code {
+
+    User user = new User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = userService.Get();
+    }
+
+    private void Logout()
+    {
+        navMan.NavigateTo("/");
+        userService.Remove();
+    }
+}

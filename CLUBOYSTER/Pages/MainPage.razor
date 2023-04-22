@@ -29,6 +29,7 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item fw-bold"><a class="nav-link" href="/mainpage" aria-current="page">Главная страница</a></li>
                         <li class="nav-item fw-bold"><a class="nav-link" href="/profile">Профиль</a></li>
+                                            <li class="nav-item fw-bold"><a class="nav-link" href="/about">О нас</a></li>
                         <li class="nav-item fw-bold"><a class="nav-link" @onclick="Logout" style="cursor:pointer">Выход</a></li>
                     </ul>
                 </div>
@@ -68,13 +69,54 @@
                         <p class="lead text-white fs-2">@date.ToString("dd.MM.yyyy")</p>
                         <p class="mb-0 text-white fs-3">Проведи вечер с комфортом.</p>
                         <label></label>
-                    <button class="btn btn-outline-light fw-bold border-3 m-2" @onclick="BuyTicket" type="button">Купить</button>
+                    <button class="btn btn-outline-light fw-bold border-3 m-2" type="button" @onclick="BuyTicket">Купить</button>
                     </div>
-                @if (message != null)
+
+                <label></label>
+                @if (check)
                 {
-                    <blockquote style="color:white; text-align:center;  top:100px; line-height: 4; font-size:30px" class="fw-bold">
-                        <strong>@message</strong>
-                    </blockquote>
+<div class="container p-0 bg-dark" style="margin-top:50px; border-radius:40px">
+        <div class="card px-4 bg-dark border-3" style="border-radius:40px">
+            <p class="h4 py-3 text-white fw-bold">Детали оплаты</p>
+            <div class="row gx-3">
+                <div class="col-12">
+                    <div class="d-flex flex-column">
+                        <p class="text mb-1 text-white fw-bold">Фамилия Имя</p>
+                        <input class="form-control mb-3 text-black fw-bold" @bind-value="Name" type="text" placeholder="Петров Иван">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="d-flex flex-column">
+                        <p class="text mb-1 text-white fw-bold">Номер карты</p>
+                        <input class="form-control mb-3 text-black fw-bold" @bind-value="NumberCard" type="text" placeholder="1234 5678 435678">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column">
+                        <p class="text mb-1 text-white fw-bold">Срок</p>
+                        <input class="form-control mb-3 text-black fw-bold" @bind-value="Date" type="text" placeholder="ММ/YYYY">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column">
+                        <p class="text mb-1 text-white fw-bold">Код</p>
+                        <input maxlength="3" class="form-control mb-3 pt-2 text-black fw-bold" @bind-value="CVV" type="password" placeholder="***">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-outline-light mb-3 fw-bold" @onclick="AcceptBuy">
+                        Оплатить ₽1299
+                    </button>
+                </div>
+            </div>
+            @if (message is not null)
+            {
+                <blockquote style="color:white; text-align:center;  top:100px; line-height: 4; font-size:30px" class="fw-bold">
+                    <strong>@message</strong>
+                </blockquote>
+            }
+        </div>
+    </div>
                 }
             </div>
         </div>
@@ -142,6 +184,14 @@
 
     private Transactions? transactions;
 
+    private bool check = false;
+
+
+    private string Name;
+    private string NumberCard;
+    private string Date;
+    private string CVV;
+
     protected override async Task OnInitializedAsync()
     {
         owner = MongoDb.FindOwner();
@@ -152,38 +202,49 @@
     private void Logout()
     {
         navMan.NavigateTo("/");
-        jsRun.InvokeVoidAsync("CloseTowRow");
-        jsRun.InvokeVoidAsync("CloseSideBar");
-        jsRun.InvokeVoidAsync("CloseNavBar");
-        jsRun.InvokeVoidAsync("CloseNavMenu");
-        jsRun.InvokeVoidAsync("CloseYprav");
+        userService.Remove();
     }
 
     private void BuyTicket()
     {
-        transactions = new Transactions()
-            {
-                Type = "Доход",
-                Time = date,
-                User = user,
-                Sum = 750,
-            };
+        check = true;
+    }
 
-        owner = new Owner()
-            {
-                FirstName = owner.FirstName,
-                SecondName = owner.SecondName,
-                Surname = owner.Surname,
-                Phone = owner.Phone,
-                Email = owner.Email,
-                Login = owner.Login,
-                Password = owner.Password,
-                TotalEarning = transactions.Sum.Value + (owner as Owner).TotalEarning,
-                AverageMonth = transactions.Sum.Value + (owner as Owner).AverageMonth,
-                TotalCustomers = (owner as Owner).TotalCustomers,
-            };
-        MongoDb.ReplaceOwner(owner);
-        message = "Покупка завершена";
-        MongoDb.AddTransaction(transactions);
+    private void AcceptBuy()
+    {
+        if (Name != null && NumberCard != null && Date != null && CVV != null)
+        {
+            transactions = new Transactions()
+        {
+            Type = "Доход",
+            Time = date,
+            User = user,
+            Sum = 1299,
+        };
+
+            owner = new Owner()
+        {
+            FirstName = owner.FirstName,
+            SecondName = owner.SecondName,
+            Surname = owner.Surname,
+            Phone = owner.Phone,
+            Email = owner.Email,
+            Login = owner.Login,
+            Password = owner.Password,
+            TotalEarning = transactions.Sum.Value + (owner as Owner).TotalEarning,
+            AverageMonth = transactions.Sum.Value + (owner as Owner).AverageMonth,
+            TotalCustomers = (owner as Owner).TotalCustomers,
+        };
+            MongoDb.ReplaceOwner(owner);
+            MongoDb.AddTransaction(transactions);
+
+            message = "Покупка обрабатывается...";
+        }
+
+        else
+        {
+            message = "Заполните поля данными";
+        }
+
     }
 }

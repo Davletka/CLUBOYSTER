@@ -17,6 +17,7 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item fw-bold"><a class="nav-link" href="/mainpage" aria-current="page">Главная страница</a></li>
                         <li class="nav-item fw-bold"><a class="nav-link" href="/profile">Профиль</a></li>
+                                            <li class="nav-item fw-bold"><a class="nav-link" href="/about">О нас</a></li>
                         <li class="nav-item fw-bold"><a class="nav-link" @onclick="Logout" style="cursor:pointer">Выход</a></li>
                     </ul>
                 </div>
@@ -37,7 +38,7 @@
                                  style="width: 150px; z-index: 0">
                             <button type="button" class="btn btn-outline-dark fw-bold" @onclick="EditProfile" data-mdb-ripple-color="dark"
                                     style="z-index: 0;">
-                                Edit profile
+                                Редактировать
                             </button>
                             <strong class="text-black fw-bold">@message</strong>
                         </div>
@@ -77,8 +78,12 @@
                             </div>
                             <button type="button" class="btn btn-outline-dark fw-bold" hidden="@hid" @onclick="SaveProfile" data-mdb-ripple-color="dark"
                                     style="z-index: 0;">
-                                Save
+                                Сохранить изменения
                             </button>
+                            @if (check)
+                            {
+                                <strong class="fw-bold" style="font-size:25px; margin-left:150px">Изменения сохранены</strong>
+                            }
                         </div>
                     </div>
                 </div>
@@ -87,10 +92,65 @@
     </div>
 </section>
 
+@if (user.GetType().Name == "User")
+{
+        <footer class="text-center text-white bg-dark">
+        <!-- Grid container -->
+        <div class="container pt-4">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+                <!-- Facebook -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/free-icon-instagram-1384063.png" style="width:50px; height:50px"/>
+                </a>
+
+                <!-- Twitter -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/twitter.png" style="width:50px; height:50px" />
+                </a>
+
+                <!-- Google -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/free-icon-google-symbol-2875404.png" style="width:50px; height:50px" />
+                </a>
+
+                <!-- Instagram -->
+                <a class="btn btn-link btn-floating btn-lg text-white m-1"
+                   href="#!"
+                   role="button"
+                   data-mdb-ripple-color="light">
+                    <img src="Icons/facebook.png" style="width:50px; height:50px" />
+                </a>
+            </section>
+            <!-- Section: Social media -->
+        </div>
+        <!-- Grid container -->
+        <!-- Copyright -->
+        <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2023 Copyright:
+            <a class="text-white" href="https://mdbootstrap.com/">CLUBOYSTER.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+}
+
+
+
 @code {
     User user = new User();
     bool dis = true;
     bool hid = true;
+
+    private bool check = false;
     private string? message;
     string pathPhoto = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjvJKg6aXJNnwv4EpwvCyU-E7gOXGlS_TCygX4YhPpQ4cObKtqPdn_OrDE_c5RwwCdYW0&usqp=CAU";
 
@@ -109,6 +169,7 @@
         MongoDb.ReplaceByName(user, user.Login);
         hid = true;
         dis = true;
+        check = true;
     }
 
     private void Logout()

@@ -29,6 +29,7 @@
                 <th scope="col">Имя</th>
                 <th scope="col">Отчество</th>
                 <th scope="col">Номер телефона</th>
+                <th scope="col">Его поставки</th>
                 <th scope="col">Договор</th>
                 <th scope="col">Закупиться</th>
             </tr>
@@ -41,11 +42,17 @@
                     <td>@item.FirstName</td>
                     <td>@item.Surname</td>
                     <td>@item.Phone</td>
+                    <td>
+                        @foreach(var item1 in item.products)
+                        {
+                            @item1.Name @space
+                        }
+                    </td>
                     <td><input type="checkbox" style="width:20px; height:20px" @bind="item.Document" disabled="disabled"/></td>
                     <td>
                         @if (item.Document.Value)
                         {
-                            <button type="button" class="btn btn-outline-light fw-bold" data-mdb-ripple-color="light" @onclick="Buy">
+                            <button type="button" class="btn btn-outline-light fw-bold" data-mdb-ripple-color="light" @onclick="() => Buy(item)">
                                 Купить
                             </button>
                         }
@@ -64,6 +71,10 @@
     Transactions transactions;
 
     private string? message;
+
+    private string? space = "; ";
+
+    private float? Sum = 0;
 
     private User? user;
 
@@ -87,14 +98,18 @@
         providers = MongoDb.FindProviders();
     }
 
-    private void Buy()
+    private void Buy(Providers providers)
     {
+        foreach(var item in providers.products)
+        {
+            Sum += item.Sum;
+        }
         transactions = new Transactions()
             {
                 Type = "Расход",
                 Time = DateTime.Now,
                 User = user,
-                Sum = rnd.Next(5000, 10000),
+                Sum = Sum,
             };
 
         owner = new Owner()

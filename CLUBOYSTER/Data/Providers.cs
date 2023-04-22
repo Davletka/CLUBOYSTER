@@ -32,6 +32,7 @@ namespace CLUBOYSTER.Data
         public bool? Document { get; set; }
 
         [BsonIgnoreIfDefault]
-        public Products? products { get; set; }  
+        public List<Products>? products { get; set; }
+
     }
 }

@@ -22,42 +22,67 @@
 
     <label class="fw-bold">Его поставки?</label>
 
-    <select style="width:100%; height:40px" class="font-italic mb-2 fw-bold text-black bg-light" >
+    <select style="width:100%; height:40px" @bind="NameProduct" class="font-italic mb-2 fw-bold text-black bg-light" >
+                    <option></option>
         @foreach (var item in products)
         {
-            <option selected value="@item" class="text-black">@item.Name</option>
+            <option value="@item.Name" class="text-black fw-bold">@item.Name</option>
         }
     </select>
+     <button type="button" style="height:40px; border-radius: 20px;" class="fw-bold" @onclick="AddProduct">Добавить поставку</button>
+
+     <label></label>
+     @if (check == true)
+    {
+        <strong class="fw-bold bg-dark text-white fs-4 text-center" style="align-content:center; margin-left:28px">Поставка добавлена!</strong>
+    }
     <label></label>
     <label class="fw-bold">Договор оформлен?</label>
 
     <input type="checkbox" style="width:20px; height:20px" @bind="@isChecked"/>
 
-    <button type="button" style="height:40px; border-radius: 20px;" class="fw-bold" @onclick="AddProvider">Добавить</button>
+    <button type="button" style="height:40px; border-radius: 20px;" class="fw-bold" @onclick="AddProvider">Создать</button>
 
 </EditForm>
 
 @code {
-    Providers provider = new Providers();
+    private Providers provider = new Providers();
 
-    List<Products>? products;
+    private bool check = false;
 
-    Products? activeProduct = new Products();
+    private List<Products> products = new List<Products>()
+    {
+        new Products() { ID = 1 ,Name="Коньяк", Sum = 15000 },
+        new Products() { ID = 2 ,Name="Виски", Sum = 22000 },
+        new Products() { ID = 3 ,Name="Пиво", Sum = 40000},
+        new Products() { ID = 4 ,Name="Шампанское", Sum = 19999 },
+        new Products() { ID = 5 ,Name="Закуски", Sum = 30000 },
+    };
+
+    private Products? activeProduct;
+
+    private string NameProduct;
+
+    private List<Products> activeProducts;
 
     private bool? isChecked = false;
 
     protected override async Task OnInitializedAsync()
     {
-        products = new List<Products>()
-        {
-            new Products() { Name="Коньяк", Sum = 15000 },
-            new Products() { Name="Виски", Sum = 22000 },
-            new Products() { Name="Пиво", Sum = 40000},
-            new Products() { Name="Шампанское", Sum = 19999 },
-            new Products() { Name="Закуски", Sum = 30000 },
-        };
+        activeProducts = new List<Products>();
     }
 
+    private void AddProduct()
+    {
+        foreach(var item in products)
+        {
+            if (item.Name == NameProduct.ToString())
+            {
+                activeProducts.Add(item);
+                check = true;
+            }
+        }
+    }
 
     private void AddProvider()
     {
@@ -68,7 +93,7 @@
             Surname = provider.Surname,
             Phone = provider.Phone,
             Document = isChecked,
-            products = activeProduct,
+            products = activeProducts,
         };
 
         MongoDb.AddProvider(provider);
