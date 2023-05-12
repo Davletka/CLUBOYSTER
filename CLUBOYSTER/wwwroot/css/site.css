@@ -70,3 +70,64 @@ a, .btn-link {
 */
 
 
+.account-text {
+    text-decoration: none;
+}
+
+.reg {
+    text-decoration: none;
+    color:gray;
+}
+
+.reg:hover {
+    text-decoration: underline;
+    color: white;
+}
+
+.btn-auth {
+    background-color: white;
+    color: black;
+
+    transition: 0.5s linear;
+}
+.btn-auth:hover {
+    background-color:black;
+    color:white;
+}
+
+#brand {
+    transition: 0.5s linear;
+}
+
+#brand:hover {
+    font-size: 1.7em;
+}
+
+#avatar-img {
+    transition: 0.5s linear;
+}
+
+#avatar-img:hover {
+    width:190px;
+}
+
+
+#earning {
+    transition:0.5s;
+}
+
+#earning:hover {
+    background-color:white;
+    color:black;
+}
+
+
+.col-lg-6 col-xl-3 mb-4 card-item {
+    transition: 0.5s;
+}
+
+    .col-lg-6 col-xl-3 mb-4 card-item:hover {
+        background-color: white;
+        color: black;
+    }
+

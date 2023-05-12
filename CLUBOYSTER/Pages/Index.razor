@@ -23,7 +23,7 @@
     <InputText id="password" class="fw-bold" type="password" @bind-Value="userModel.Password"></InputText>
     <ValidationMessage class="fw-bold" For="() => userModel.Password" />
 
-    <button type="button" style="border-radius: 20px" class="fw-bold" @onclick="Autorizaiton">Войти</button>
+    <button type="button" style="border-radius: 20px" class="fw-bold btn-auth" @onclick="Autorizaiton">Войти</button>
     <label></label>
 
     @if (check == true)
@@ -34,7 +34,7 @@
     }
             <label></label>
             <div style="text-align:center">
-              <p class="mb-0 text-white fw-bold">У вас не имеется аккаунта? <a href="/registration" class="text-white-50 fw-bold"> Регистрация</a>
+              <p class="mb-0 text-white fw-bold account">У вас не имеется аккаунта?<a href="/registration" class=" fw-bold reg">Регистрация</a>
               </p>
             </div>
 

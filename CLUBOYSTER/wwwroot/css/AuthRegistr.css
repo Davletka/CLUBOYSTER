@@ -171,3 +171,12 @@ button {
     justify-content: space-between;
     padding: 0.5rem 1rem;
 }
+
+.reg {
+    text-decoration: none;
+}
+
+    .reg:hover {
+        text-decoration: underline;
+        color: white;
+    }
